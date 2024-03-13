@@ -2,20 +2,24 @@ import random
 import curses
 
 
-def create_apple(snake, sh, sw):
+def create_food(snake, sh, sw):
     food = None
     while food is None:
-        nf = (random.randint(1, sh - 2), random.randint(1, sw - 2))
-        food = nf if nf not in snake else None
+        new_food = (random.randint(1, sh - 2), random.randint(1, sw - 2))
+        food = new_food if new_food not in snake else None
     return food
 
 
 def main(screen):
     curses.curs_set(0)
+
+    form_food = curses.ACS_DIAMOND
+    part_snake = curses.ACS_CKBOARD
+
     height, width = screen.getmaxyx()
-    w = curses.newwin(height, width, 0, 0)
-    w.keypad(1)
-    w.timeout(100)
+    window = curses.newwin(height, width, 0, 0)
+    window.keypad(1)
+    window.timeout(100)
 
     snake_x = width // 4
     snake_y = height // 2
@@ -25,13 +29,13 @@ def main(screen):
         (snake_y, snake_x - 2)
     ]
 
-    food = create_apple(snake, height, width)
-    w.addch(food[0], food[1], curses.ACS_DIAMOND)
+    food = create_food(snake, height, width)
+    window.addch(food[0], food[1], form_food)
 
     key = curses.KEY_RIGHT
 
     while True:
-        next_key = w.getch()
+        next_key = window.getch()
         if next_key != -1 and (
                 (next_key == 27) or
                 (next_key == curses.KEY_DOWN and key != curses.KEY_UP) or
@@ -59,13 +63,13 @@ def main(screen):
         snake.insert(0, new_head)
 
         if snake[0] == food:
-            food = create_apple(snake, height, width)
-            w.addch(food[0], food[1], curses.ACS_DIAMOND)
+            food = create_food(snake, height, width)
+            window.addch(food[0], food[1], form_food)
         else:
             tail = snake.pop()
-            w.addch(tail[0], tail[1], ' ')
+            window.addch(tail[0], tail[1], ' ')
 
-        w.addch(snake[0][0], snake[0][1], curses.ACS_CKBOARD)
+        window.addch(snake[0][0], snake[0][1], part_snake)
 
 
 curses.wrapper(main)
