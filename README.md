@@ -22,7 +22,7 @@ All scripts for Mac and Linux.
 
 - Clone the repository:
 ```bash
-  git clone git@github.com:LizaKoch/snake_term.git
+  git clone https://github.com/LizaKoch/snake_term.git
 ```
 or download the zip file and extract it.
 
